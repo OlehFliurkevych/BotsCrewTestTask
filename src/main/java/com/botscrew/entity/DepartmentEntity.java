@@ -22,10 +22,9 @@ public class DepartmentEntity extends BaseEntity{
 	@JoinColumn(name="lector_id")
 	private LectorEntity lector;
 
-	public DepartmentEntity(String departmentName, String headOfDepartmentName, LectorEntity lector) {
+	public DepartmentEntity(String departmentName, String headOfDepartmentName) {
 		this.departmentName = departmentName;
 		this.headOfDepartmentName = headOfDepartmentName;
-		this.lector = lector;
 	}
 
 	public DepartmentEntity() {

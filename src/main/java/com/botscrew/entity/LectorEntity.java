@@ -23,11 +23,10 @@ public class LectorEntity extends BaseEntity{
 
 	public LectorEntity() {
 	}
-	
-	public LectorEntity(String lectorName, DegreeEnum degree, List<DepartmentEntity> departments) {
+
+	public LectorEntity(String lectorName, DegreeEnum degree) {
 		this.lectorName = lectorName;
 		this.degree = degree;
-		this.departments = departments;
 	}
 
 	public String getLectorName() {
