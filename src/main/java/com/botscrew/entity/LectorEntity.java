@@ -1,10 +1,14 @@
 package com.botscrew.entity;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -18,15 +22,40 @@ public class LectorEntity extends BaseEntity{
 	@Column(name="degree")
 	private DegreeEnum degree;
 	
-	@OneToMany(cascade=CascadeType.ALL,mappedBy="lector")
-	private List<DepartmentEntity> departments;
+	@Column(name="salary")
+	private int salary;
+	
+	@ManyToOne
+	@JoinColumn(name="department_id")
+	private DepartmentEntity department;
+	
+//	@ManyToMany(mappedBy="lectors")
+//	private List<DepartmentEntity> departments;
+	
+	
 
 	public LectorEntity() {
 	}
 
-	public LectorEntity(String lectorName, DegreeEnum degree) {
+	@Override
+	public String toString() {
+		return "LectorEntity [lectorName=" + lectorName + ", degree=" + degree + ", salary=" + salary + ", department="
+				+ department + "]";
+	}
+
+	public DepartmentEntity getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(DepartmentEntity department) {
+		this.department = department;
+	}
+
+	public LectorEntity(String lectorName, DegreeEnum degree, int salary, DepartmentEntity department) {
 		this.lectorName = lectorName;
 		this.degree = degree;
+		this.salary = salary;
+		this.department = department;
 	}
 
 	public String getLectorName() {
@@ -45,17 +74,27 @@ public class LectorEntity extends BaseEntity{
 		this.degree = degree;
 	}
 
-	public List<DepartmentEntity> getDepartments() {
-		return departments;
+//	public List<DepartmentEntity> getDepartments() {
+//		return departments;
+//	}
+//
+//	public void setDepartments(List<DepartmentEntity> departments) {
+//		this.departments = departments;
+//	}
+	
+
+	public int getSalary() {
+		return salary;
 	}
 
-	public void setDepartments(List<DepartmentEntity> departments) {
-		this.departments = departments;
+	public void setSalary(int salary) {
+		this.salary = salary;
 	}
 
-	@Override
-	public String toString() {
-		return "LectorEntity [lectorName=" + lectorName + ", degree=" + degree + ", departments=" + departments + "]";
-	}
+//	@Override
+//	public String toString() {
+//		return "LectorEntity [lectorName=" + lectorName + ", degree=" + degree + ", salary=" + salary + ", departments="
+//				+ departments + "]";
+//	}
 	
 }

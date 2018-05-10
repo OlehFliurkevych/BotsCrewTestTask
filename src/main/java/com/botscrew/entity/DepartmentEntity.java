@@ -1,10 +1,16 @@
 package com.botscrew.entity;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
@@ -18,9 +24,16 @@ public class DepartmentEntity extends BaseEntity{
 	@Column(name="head_of_department_name")
 	private String headOfDepartmentName;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="lector_id")
-	private LectorEntity lector;
+	@OneToMany(cascade=CascadeType.ALL,mappedBy="department")
+	private List<LectorEntity> lectors;
+
+	
+//	@ManyToMany(cascade={CascadeType.ALL})
+//	@JoinTable(
+//			name="department_lector",
+//			joinColumns={@JoinColumn(name="department_id")},
+//			inverseJoinColumns={@JoinColumn(name="lector_id")})
+//	private List<LectorEntity> lectors;
 
 	public DepartmentEntity(String departmentName, String headOfDepartmentName) {
 		this.departmentName = departmentName;
@@ -45,19 +58,37 @@ public class DepartmentEntity extends BaseEntity{
 	public void setHeadOfDepartmentName(String headOfDepartmentName) {
 		this.headOfDepartmentName = headOfDepartmentName;
 	}
+	
 
-	public LectorEntity getLector() {
-		return lector;
+	public List<LectorEntity> getLectors() {
+		return lectors;
 	}
 
-	public void setLector(LectorEntity lector) {
-		this.lector = lector;
+	public void setLectors(List<LectorEntity> lectors) {
+		this.lectors = lectors;
 	}
 
 	@Override
 	public String toString() {
 		return "DepartmentEntity [departmentName=" + departmentName + ", headOfDepartmentName=" + headOfDepartmentName
-				+ ", lector=" + lector + "]";
+				+ ", lectors=" + lectors + "]";
 	}
+	
+	
+//	public List<LectorEntity> getLectors() {
+//		return lectors;
+//	}
+//
+//	public void setLectors(List<LectorEntity> lectors) {
+//		this.lectors = lectors;
+//	}
+//
+//	@Override
+//	public String toString() {
+//		return "DepartmentEntity [departmentName=" + departmentName + ", headOfDepartmentName=" + headOfDepartmentName
+//				+ ", lectors=" + lectors + "]";
+//	}
+
+	
 	
 }
