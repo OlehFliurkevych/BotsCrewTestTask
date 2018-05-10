@@ -134,41 +134,65 @@ public class App
         				DepartmentEntity.class)
         				.setParameter("name",departHead.trim());
         		DepartmentEntity depart=(DepartmentEntity)query.getSingleResult();
-        		System.out.println("________________________________________________"+'\n');
+        		System.out.println("================================================"+'\n');
         		
         		System.out.println("Head of "+depart.getDepartmentName()
         				+" department is "
         				+depart.getHeadOfDepartmentName());
-        		System.out.println("________________________________________________");
-        	}else if(line.contains("Show")&&line.substring(line.length()-10, line.length()-2)=="statistic"){
-        		System.out.println("________________________________________________"+'\n');
-        		System.out.println("assistans - ");
-        		System.out.println("associate professors - ");
-        		System.out.println("professors - ");
-        		System.out.println("________________________________________________");
+        		System.out.println("================================================");
+        	}else if(line.contains("Show")&&line.substring(line.length()-10, line.length()).trim().equals("statistic")){
+        		String departHead=line.substring("Show".length(), line.length()-10).trim();
+        		TypedQuery<Long> countAssist=
+        				em.createQuery("SELECT count(l) FROM LectorEntity l "
+        						+ "WHERE l.department.departmentName=:name and "
+        						+ "l.degree=:degree",Long.class)
+        				.setParameter("name", departHead)
+        				.setParameter("degree", DegreeEnum.ASSIST);
+        		Long assists=countAssist.getSingleResult();
+        		TypedQuery<Long> countAssocProf=
+        				em.createQuery("SELECT count(l) FROM LectorEntity l "
+        						+ "WHERE l.department.departmentName=:name and "
+        						+ "l.degree=:degree",Long.class)
+        				.setParameter("name", departHead)
+        				.setParameter("degree", DegreeEnum.ASSOCPROF);
+        		Long associatProf=countAssocProf.getSingleResult();
+        		TypedQuery<Long> countProf=
+        				em.createQuery("SELECT count(l) FROM LectorEntity l "
+        						+ "WHERE l.department.departmentName=:name and "
+        						+ "l.degree=:degree",Long.class)
+        				.setParameter("name", departHead)
+        				.setParameter("degree", DegreeEnum.PROF);
+        		Long professors=countProf.getSingleResult();
+        		System.out.println("================================================"+'\n');
+        		System.out.println("assistans - "+assists);
+        		System.out.println("associate professors - "+associatProf);
+        		System.out.println("professors - "+professors);
+        		System.out.println("================================================");
         	}else if(line.contains("Show the average salary for department")){
         		String departName=cutLine(line,"Show the average salary for department");
         		System.out.println(departName);
-        		TypedQuery<Double> avgQuery=em.createQuery("SELECT avg(l.salary) FROM LectorEntity l WHERE l.department.departmentName=:name",Double.class)
+        		TypedQuery<Double> avgQuery=
+        				em.createQuery("SELECT avg(l.salary) FROM LectorEntity l WHERE l.department.departmentName=:name",Double.class)
         				.setParameter("name",departName.trim());
         		Double avg=avgQuery.getSingleResult();
-        		System.out.println("________________________________________________"+'\n');
+        		System.out.println("================================================"+'\n');
         		System.out.println("The average salary of "+departName+" is "+avg);
-        		System.out.println("________________________________________________");
+        		System.out.println("================================================");
         	}else if(line.contains("Show count of employee for")){
         		String departName=cutLine(line,"Show count of employee for");
         		System.out.println(departName);
         		TypedQuery<Long> countEmp=em.createQuery("SELECT count(l) FROM LectorEntity l WHERE l.department.departmentName=:name",Long.class)
         				.setParameter("name", departName.trim());
         		Long count=countEmp.getSingleResult();
-        		System.out.println("________________________________________________"+'\n');
+        		System.out.println("================================================"+'\n');
         		System.out.println(count);
-        		System.out.println("________________________________________________");
+        		System.out.println("================================================");
         	}else if(line.contains("Global search by")){
         		String search=cutLine(line,"Global search by");
-        		System.out.println("________________________________________________"+'\n');
+        		System.out.println("================================================"+'\n');
+        		
         		System.out.println();
-        		System.out.println("________________________________________________");
+        		System.out.println("================================================");
         	}
     	
     	em.close();
