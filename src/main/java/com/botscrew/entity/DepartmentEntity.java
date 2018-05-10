@@ -5,11 +5,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -71,8 +66,14 @@ public class DepartmentEntity extends BaseEntity{
 	@Override
 	public String toString() {
 		return "DepartmentEntity [departmentName=" + departmentName + ", headOfDepartmentName=" + headOfDepartmentName
-				+ ", lectors=" + lectors + "]";
+				+ "]";
 	}
+
+/*	@Override
+	public String toString() {
+		return "DepartmentEntity [departmentName=" + departmentName + ", headOfDepartmentName=" + headOfDepartmentName
+				+ ", lectors=" + lectors + "]";
+	}*/
 	
 	
 //	public List<LectorEntity> getLectors() {

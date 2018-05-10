@@ -1,15 +1,9 @@
 package com.botscrew.entity;
 
-import java.math.BigDecimal;
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -37,11 +31,20 @@ public class LectorEntity extends BaseEntity{
 	public LectorEntity() {
 	}
 
-	@Override
+	
+	
+/*	@Override
 	public String toString() {
 		return "LectorEntity [lectorName=" + lectorName + ", degree=" + degree + ", salary=" + salary + ", department="
 				+ department + "]";
+	}*/
+
+	@Override
+	public String toString() {
+		return "LectorEntity [lectorName=" + lectorName + ", degree=" + degree + ", salary=" + salary + "]";
 	}
+
+
 
 	public DepartmentEntity getDepartment() {
 		return department;

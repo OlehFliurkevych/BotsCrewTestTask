@@ -141,7 +141,11 @@ public class App
         				+depart.getHeadOfDepartmentName());
         		System.out.println("________________________________________________");
         	}else if(line.contains("Show")&&line.substring(line.length()-10, line.length()-2)=="statistic"){
-        		System.out.println("yes");
+        		System.out.println("________________________________________________"+'\n');
+        		System.out.println("assistans - ");
+        		System.out.println("associate professors - ");
+        		System.out.println("professors - ");
+        		System.out.println("________________________________________________");
         	}else if(line.contains("Show the average salary for department")){
         		String departName=cutLine(line,"Show the average salary for department");
         		System.out.println(departName);
@@ -153,8 +157,12 @@ public class App
         		System.out.println("________________________________________________");
         	}else if(line.contains("Show count of employee for")){
         		String departName=cutLine(line,"Show count of employee for");
+        		System.out.println(departName);
+        		TypedQuery<Long> countEmp=em.createQuery("SELECT count(l) FROM LectorEntity l WHERE l.department.departmentName=:name",Long.class)
+        				.setParameter("name", departName.trim());
+        		Long count=countEmp.getSingleResult();
         		System.out.println("________________________________________________"+'\n');
-        		System.out.println();
+        		System.out.println(count);
         		System.out.println("________________________________________________");
         	}else if(line.contains("Global search by")){
         		String search=cutLine(line,"Global search by");
