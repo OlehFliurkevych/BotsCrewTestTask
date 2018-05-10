@@ -8,8 +8,12 @@ import java.util.Scanner;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+
+import org.apache.lucene.search.Query;
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.Search;
+import org.hibernate.search.query.dsl.QueryBuilder;
 
 import com.botscrew.entity.DegreeEnum;
 import com.botscrew.entity.DepartmentEntity;
@@ -19,11 +23,11 @@ import com.botscrew.entity.LectorEntity;
 public class App 
 {
 	
-    public static void main( String[] args )
+    public static void main( String[] args ) throws InterruptedException
     {
     	EntityManagerFactory emf=Persistence.createEntityManagerFactory("testtask");
     	EntityManager em=emf.createEntityManager();
-    	
+    	FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(em);
     	em.getTransaction().begin();
     	
 
@@ -189,12 +193,32 @@ public class App
         		System.out.println("================================================");
         	}else if(line.contains("Global search by")){
         		String search=cutLine(line,"Global search by");
+        		System.out.println("Went to method");
         		System.out.println("================================================"+'\n');
         		
-        		System.out.println();
+        		System.out.println(search.trim());
+        		
+        		QueryBuilder qb=fullTextEntityManager.getSearchFactory()
+        				.buildQueryBuilder().forEntity(DepartmentEntity.class).get();
+        		Query luceneQuery=qb.keyword().onFields("departmentName","headOfDepartmentName")
+        				.matching(search.trim())
+        				.createQuery();
+        		javax.persistence.Query jpaQuery=fullTextEntityManager
+        				.createFullTextQuery(luceneQuery, DepartmentEntity.class);
+        		
+        		QueryBuilder qbLector=fullTextEntityManager.getSearchFactory()
+        				.buildQueryBuilder().forEntity(LectorEntity.class).get();
+        		Query luceneQueryLector=qbLector.keyword().onField("lectorName")
+        				.matching(search.trim())
+        				.createQuery();
+        		javax.persistence.Query jpaQueryLector=fullTextEntityManager
+        				.createFullTextQuery(luceneQueryLector, LectorEntity.class);
+        		List result=jpaQuery.getResultList();
+        		result.addAll(jpaQueryLector.getResultList());
+        		System.out.println(result);
         		System.out.println("================================================");
         	}
-    	
+    		
     	em.close();
     	emf.close();
     }

@@ -6,38 +6,55 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
+import org.apache.lucene.analysis.snowball.SnowballPorterFilterFactory;
+import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Analyzer;
+import org.hibernate.search.annotations.AnalyzerDef;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.Parameter;
+import org.hibernate.search.annotations.Store;
+import org.hibernate.search.annotations.TokenFilterDef;
+import org.hibernate.search.annotations.TokenizerDef;
+
 @Entity
+@Indexed
 @Table(name="lector")
+@AnalyzerDef(name = "customanalyzerLector",
+tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
+filters = {
+  @TokenFilterDef(factory = LowerCaseFilterFactory.class),
+  @TokenFilterDef(factory = SnowballPorterFilterFactory.class, params = {
+    @Parameter(name = "language", value = "English")
+  })
+})
 public class LectorEntity extends BaseEntity{
 
+	@Field
 	@Column(name="lector_name")
+//	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
+	@Analyzer(definition = "customanalyzerLector")
 	private String lectorName;
 	
+	@Field
 	@Column(name="degree")
 	private DegreeEnum degree;
 	
+	@Field
 	@Column(name="salary")
 	private int salary;
 	
+//	@IndexedEmbedded
 	@ManyToOne
 	@JoinColumn(name="department_id")
 	private DepartmentEntity department;
-	
-//	@ManyToMany(mappedBy="lectors")
-//	private List<DepartmentEntity> departments;
-	
-	
 
 	public LectorEntity() {
 	}
-
-	
-	
-/*	@Override
-	public String toString() {
-		return "LectorEntity [lectorName=" + lectorName + ", degree=" + degree + ", salary=" + salary + ", department="
-				+ department + "]";
-	}*/
 
 	@Override
 	public String toString() {
@@ -76,14 +93,6 @@ public class LectorEntity extends BaseEntity{
 	public void setDegree(DegreeEnum degree) {
 		this.degree = degree;
 	}
-
-//	public List<DepartmentEntity> getDepartments() {
-//		return departments;
-//	}
-//
-//	public void setDepartments(List<DepartmentEntity> departments) {
-//		this.departments = departments;
-//	}
 	
 
 	public int getSalary() {
@@ -93,11 +102,5 @@ public class LectorEntity extends BaseEntity{
 	public void setSalary(int salary) {
 		this.salary = salary;
 	}
-
-//	@Override
-//	public String toString() {
-//		return "LectorEntity [lectorName=" + lectorName + ", degree=" + degree + ", salary=" + salary + ", departments="
-//				+ departments + "]";
-//	}
 	
 }
