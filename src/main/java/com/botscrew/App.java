@@ -131,7 +131,9 @@ public class App
     	boolean exist=true;
     	
     	while(exist){
+    		System.out.println("==============================================================="+'\n');
     		System.out.println("==================== Welcome to university ===================="+'\n');
+    		System.out.println("==============================================================="+'\n');
     		System.out.println("Please enter your query or enter 0 (zero) to exit."+'\n');
         	Scanner sc=new Scanner(System.in);
         	String line=sc.nextLine();
@@ -146,7 +148,7 @@ public class App
         		System.out.println("Head of "+depart.getDepartmentName()
         				+" department is "
         				+depart.getHeadOfDepartmentName()+'\n');
-        		System.out.println("================================================"+'\n');
+        		System.out.println("================================================"+"\n\n");
         	}else if(line.contains("Show")&&line.substring(line.length()-10, line.length()).trim().equals("statistic")){
         		String departHead=line.substring("Show".length(), line.length()-10).trim();
         		TypedQuery<Long> countAssist=
@@ -174,58 +176,66 @@ public class App
         		System.out.println("assistans - "+assists);
         		System.out.println("associate professors - "+associatProf);
         		System.out.println("professors - "+professors+'\n');
-        		System.out.println("================================================"+'\n');
+        		System.out.println("================================================"+"\n\n");
         	}else if(line.contains("Show the average salary for department")){
         		String departName=cutLine(line,"Show the average salary for department");
-        		System.out.println(departName);
         		TypedQuery<Double> avgQuery=
         				em.createQuery("SELECT avg(l.salary) FROM LectorEntity l WHERE l.department.departmentName=:name",Double.class)
         				.setParameter("name",departName.trim());
         		Double avg=avgQuery.getSingleResult();
         		System.out.println("================================================"+'\n');
-        		System.out.println("The average salary of "+departName+" is "+avg);
-        		System.out.println("================================================"+'\n');
+        		System.out.println("The average salary of "+departName+" is "+avg+'\n');
+        		System.out.println("================================================"+"\n\n");
         	}else if(line.contains("Show count of employee for")){
         		String departName=cutLine(line,"Show count of employee for");
-        		System.out.println(departName);
         		TypedQuery<Long> countEmp=em.createQuery("SELECT count(l) FROM LectorEntity l WHERE l.department.departmentName=:name",Long.class)
         				.setParameter("name", departName.trim());
         		Long count=countEmp.getSingleResult();
         		System.out.println("================================================"+'\n');
-        		System.out.println(count);
-        		System.out.println("================================================"+'\n');
+        		System.out.println(count+'\n');
+        		System.out.println("================================================"+"\n\n");
         	}else if(line.contains("Global search by")){
         		String search=cutLine(line,"Global search by");
-        		System.out.println("Went to method");
-        		System.out.println("================================================"+'\n');
-        		
-        		System.out.println(search.trim());
-        		
-        		QueryBuilder qb=fullTextEntityManager.getSearchFactory()
-        				.buildQueryBuilder().forEntity(DepartmentEntity.class).get();
-        		Query luceneQuery=qb.keyword().onFields("departmentName","headOfDepartmentName")
-        				.matching(search.trim())
+        		System.out.println(search);
+        		QueryBuilder qb=fullTextEntityManager
+        				.getSearchFactory()
+        				.buildQueryBuilder()
+        				.forEntity(DepartmentEntity.class)
+        				.get();
+        		Query luceneQuery=qb.keyword()
+        				.wildcard()
+        				.onFields("departmentName","headOfDepartmentName")
+        				.matching("*"+search.trim()+"*")
         				.createQuery();
         		javax.persistence.Query jpaQuery=fullTextEntityManager
         				.createFullTextQuery(luceneQuery, DepartmentEntity.class);
         		
         		QueryBuilder qbLector=fullTextEntityManager.getSearchFactory()
         				.buildQueryBuilder().forEntity(LectorEntity.class).get();
-        		Query luceneQueryLector=qbLector.keyword().onField("lectorName")
-        				.matching(search.trim())
+        		Query luceneQueryLector=qbLector
+        				.keyword()
+        				.wildcard()
+        				.onField("lectorName")
+        				.matching("*"+search.trim()+"*")
         				.createQuery();
         		javax.persistence.Query jpaQueryLector=fullTextEntityManager
         				.createFullTextQuery(luceneQueryLector, LectorEntity.class);
         		List result=jpaQuery.getResultList();
-        		result.addAll(jpaQueryLector.getResultList());
-        		System.out.println(result+"\n");
+        		List resultLector=jpaQueryLector.getResultList();
         		System.out.println("================================================"+'\n');
+        		for (Object object : result) {
+        			System.out.println(object+"\n");
+				}
+        		for (Object object : resultLector) {
+        			System.out.println(object+"\n");
+				}
+        		System.out.println("================================================"+"\n\n");
         	}else if(line.equals("0")||line.equals("zero")){
         		exist=false;
         	}else{
         		System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++"+'\n');
         		System.out.println("You enter wrong query! Please repeat entering!"+'\n');
-        		System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++"+'\n');
+        		System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++"+"\n\n");
         	}
     	}
     	em.close();
