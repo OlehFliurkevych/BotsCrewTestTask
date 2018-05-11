@@ -129,9 +129,12 @@ public class App
 		}
     	em.getTransaction().commit();
     	boolean exist=true;
-    	System.out.println("__________Welcome to university________");
-    	Scanner sc=new Scanner(System.in);
-    	String line=sc.nextLine();
+    	
+    	while(exist){
+    		System.out.println("==================== Welcome to university ===================="+'\n');
+    		System.out.println("Please enter your query or enter 0 (zero) to exit."+'\n');
+        	Scanner sc=new Scanner(System.in);
+        	String line=sc.nextLine();
     		if(line.contains("Who is head of department")){
         		String departHead=cutLine(line,"Who is head of department");
         		TypedQuery<DepartmentEntity> query=em.createQuery("SELECT d FROM DepartmentEntity d WHERE d.departmentName=:name",
@@ -142,8 +145,8 @@ public class App
         		
         		System.out.println("Head of "+depart.getDepartmentName()
         				+" department is "
-        				+depart.getHeadOfDepartmentName());
-        		System.out.println("================================================");
+        				+depart.getHeadOfDepartmentName()+'\n');
+        		System.out.println("================================================"+'\n');
         	}else if(line.contains("Show")&&line.substring(line.length()-10, line.length()).trim().equals("statistic")){
         		String departHead=line.substring("Show".length(), line.length()-10).trim();
         		TypedQuery<Long> countAssist=
@@ -170,8 +173,8 @@ public class App
         		System.out.println("================================================"+'\n');
         		System.out.println("assistans - "+assists);
         		System.out.println("associate professors - "+associatProf);
-        		System.out.println("professors - "+professors);
-        		System.out.println("================================================");
+        		System.out.println("professors - "+professors+'\n');
+        		System.out.println("================================================"+'\n');
         	}else if(line.contains("Show the average salary for department")){
         		String departName=cutLine(line,"Show the average salary for department");
         		System.out.println(departName);
@@ -181,7 +184,7 @@ public class App
         		Double avg=avgQuery.getSingleResult();
         		System.out.println("================================================"+'\n');
         		System.out.println("The average salary of "+departName+" is "+avg);
-        		System.out.println("================================================");
+        		System.out.println("================================================"+'\n');
         	}else if(line.contains("Show count of employee for")){
         		String departName=cutLine(line,"Show count of employee for");
         		System.out.println(departName);
@@ -190,7 +193,7 @@ public class App
         		Long count=countEmp.getSingleResult();
         		System.out.println("================================================"+'\n');
         		System.out.println(count);
-        		System.out.println("================================================");
+        		System.out.println("================================================"+'\n');
         	}else if(line.contains("Global search by")){
         		String search=cutLine(line,"Global search by");
         		System.out.println("Went to method");
@@ -215,10 +218,16 @@ public class App
         				.createFullTextQuery(luceneQueryLector, LectorEntity.class);
         		List result=jpaQuery.getResultList();
         		result.addAll(jpaQueryLector.getResultList());
-        		System.out.println(result);
-        		System.out.println("================================================");
+        		System.out.println(result+"\n");
+        		System.out.println("================================================"+'\n');
+        	}else if(line.equals("0")||line.equals("zero")){
+        		exist=false;
+        	}else{
+        		System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++"+'\n');
+        		System.out.println("You enter wrong query! Please repeat entering!"+'\n');
+        		System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++"+'\n');
         	}
-    		
+    	}
     	em.close();
     	emf.close();
     }
